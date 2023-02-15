@@ -7,15 +7,19 @@ const userSchema = new mongoose.Schema({
 	username: {
 		type: String,
 		required: [true, 'Username is required'],
-		unique: true
 	},
 	password: {
 		type: String,
 		required: true
 	},
 	address: {
-		type: String
-	}
+		type: String,
+		required: true
+	},
+	publications: [{
+		type: mongoose.Types.ObjectId,
+		ref: 'Publication'
+	}]
 });
 
 userSchema.pre('save', function (next) {
