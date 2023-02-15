@@ -1,17 +1,24 @@
 const router = require('express').Router();
+
 const { isAuth } = require('../middlewares/authMiddleware');
 const publicationService = require('../services/publicationService');
 
-router.use(isAuth);
+router.get('/', async (req, res) => {
+	const publications = await publicationService.getAll().lean();
 
-router.get('/create', (req, res) => {
+	res.render('publication', { publications });
+});
+
+router.get('/create', isAuth, (req, res) => {
 	res.render('publication/create');
 });
 
-router.get('/create', async (req, res) => {
-	const createdPublication = await publicationService.create(req.body);
+router.post('/create', isAuth, async (req, res) => {
+	const publicationData = { ...req.body, author: req.user._id };
 
-	res.redirect('/');
+	await publicationService.create(publicationData);
+
+	res.redirect('/publications');
 });
 
 module.exports = router;
