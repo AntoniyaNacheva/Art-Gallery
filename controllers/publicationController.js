@@ -40,6 +40,15 @@ router.post('/:publicationId/edit',
 	}
 );
 
+router.get('/:publicationId/delete',
+	isAuth, preloadPublication, isPublicationAuthor,
+	async (req, res) => {
+		await publicationService.delete(req.params.publicationId);
+
+		res.redirect('/publications');
+	}
+);
+
 router.get('/create', isAuth, (req, res) => {
 	res.render('publication/create');
 });
